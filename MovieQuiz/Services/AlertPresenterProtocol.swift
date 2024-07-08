@@ -2,7 +2,13 @@
 //  AlertPresenterProtocol.swift
 //  MovieQuiz
 //
-//  Created by Александр Матвеев on 08.07.2024.
+//  Created by Дмитрий Матвеев on 08.07.2024.
 //
 
-import Foundation
+import UIKit
+
+protocol AlertPresenterProtocol {
+    
+    
+    func showResults(alertModel: AlertModel?, on viewController: UIViewController)
+}
