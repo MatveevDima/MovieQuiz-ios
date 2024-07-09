@@ -22,6 +22,7 @@ class AlertPresenter : AlertPresenterProtocol {
         )
             
         let action = UIAlertAction(title: alertModel.buttonText, style: .default) { [weak self] _ in
+
             alertModel.completion()
         }
         

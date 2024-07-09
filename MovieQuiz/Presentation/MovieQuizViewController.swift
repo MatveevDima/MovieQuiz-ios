@@ -22,6 +22,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
+    private var statisticService: StatisticServiceProtocol?
     private var alertPresenter: AlertPresenterProtocol?
    
     
@@ -78,7 +79,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
             // код, который мы хотим вызвать через 1 секунду
-           self.showNextQuestionOrResults()
+            self.image.layer.masksToBounds = false
+            self.image.layer.borderWidth = 0
+            self.showNextQuestionOrResults()
         }
     }
     
@@ -99,6 +102,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         super.viewDidLoad()
         
         self.currentQuestionIndex = 0
+        
+        self.statisticService = StatisticService()
         
         let alertPresenter = AlertPresenter()
         alertPresenter.delegate = self
@@ -128,11 +133,23 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     // MARK: - AlertPresenterDelegate
     func showResults() {
         
+        statisticService?.store(correct: correctAnswers, total: questionsAmount)
+        
+        let totalAccuracy = statisticService?.totalAccuracy ?? Double(correctAnswers) / Double(questionsAmount)
+        let gamesCount = statisticService?.gamesCount ?? 1
+        let bestGame = statisticService?.bestGame
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
         alertPresenter?.showResults(alertModel: AlertModel(
             title: "Этот раунд окончен!",
-            message: correctAnswers == questionsAmount ?
-                "Поздравляем, вы ответили на 10 из 10!" :
-                "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!",
+            message: """
+            Ваш результат: \(correctAnswers)/\(questionsAmount)
+            Количество сыгранных квизов: \(gamesCount))
+            Рекорд: \(bestGame?.correct ?? correctAnswers)/\(bestGame?.total ?? questionsAmount) (\(dateFormatter.string(from: bestGame?.date ?? Date())))
+            Средняя точность: \(String(format: "%.2f", totalAccuracy))%
+            """,
             buttonText: "Сыграть ещё раз"
         ) { [weak self] in
             self?.currentQuestionIndex = 0
