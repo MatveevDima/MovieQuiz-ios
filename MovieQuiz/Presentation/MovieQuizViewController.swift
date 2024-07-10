@@ -111,7 +111,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         alertPresenter.delegate = self
         self.alertPresenter = alertPresenter
         
-        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(networkClient: NetworkClient()), delegate: self)
         self.questionFactory = questionFactory
         
         questionFactory.loadData()

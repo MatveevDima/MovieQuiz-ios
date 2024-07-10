@@ -8,7 +8,7 @@
 import UIKit
 
 /// Отвечает за загрузку данных по URL
-struct NetworkClient {
+struct NetworkClient : NetworkRoutingProtocol {
 
     private enum NetworkError: Error {
         case codeError

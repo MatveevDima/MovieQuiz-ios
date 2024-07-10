@@ -9,8 +9,12 @@ import UIKit
 
 struct MoviesLoader: MoviesLoadingProtocol {
     
+    init(networkClient: NetworkRoutingProtocol) {
+        self.networkClient = networkClient
+    }
+    
     // MARK: - NetworkClient
-        private let networkClient = NetworkClient()
+    private let networkClient : NetworkRoutingProtocol
         
     // MARK: - URL
     private var mostPopularMoviesUrl: URL {
