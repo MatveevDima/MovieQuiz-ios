@@ -9,7 +9,7 @@ import UIKit
 
 final class MovieQuizPresenter : QuestionFactoryDelegate, AlertPresenterDelegate {
     
-    weak var viewController: MovieQuizViewController?
+    weak var viewController: MovieQuizViewControllerProtocol?
     private var questionFactory: QuestionFactoryProtocol?
     private var statisticService: StatisticServiceProtocol?
     private var alertPresenter: AlertPresenterProtocol?
@@ -19,7 +19,7 @@ final class MovieQuizPresenter : QuestionFactoryDelegate, AlertPresenterDelegate
     private var currentQuestionIndex: Int = 0
     var currentQuestion: QuizQuestion?
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         self.questionFactory = QuestionFactory(
             moviesLoader: MoviesLoader(
@@ -46,7 +46,7 @@ final class MovieQuizPresenter : QuestionFactoryDelegate, AlertPresenterDelegate
         questionFactory!.requestNextQuestion()
     }
     
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
+    func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
             image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
